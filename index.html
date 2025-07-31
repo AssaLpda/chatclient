@@ -10,21 +10,59 @@
 </head>
 <body>
 
-<div class="info-box" aria-label="Información importante">
-  <strong>✅ Plataforma Verificada ✅</strong><br/>
-  Si es BET es de Confianza<br/><br/>
-  Te estamos conectando con nuestro equipo vía <strong>Chat en vivo</strong><br/><br/>
-  <button id="btnHablar">Hablar ahora!</button>
-  <br/>
-  +10.000 CLIENTES GANANDO todos los días
-</div>
+<div class="info-chat-container">
 
-<div id="chatWrapper" aria-live="polite" aria-atomic="false" role="log" aria-label="Chat en vivo">
-  <div id="chatContainer"></div>
-  <footer>
-    <input type="text" id="mensajeInput" placeholder="Escribí tu mensaje" aria-label="Mensaje" />
-    <button id="btnEnviar">Enviar</button>
-  </footer>
+  <!-- Info inicial visible -->
+  <div class="info-inicial" aria-label="Información importante">
+    <div class="info-status">
+      <span class="checkmark">✅</span> <strong>Plataforma Verificada</strong> <span class="checkmark">✅</span>
+    </div>
+
+    <p class="info-trust">Si es BET es de Confianza</p>
+
+    <p class="info-connecting">Te estamos conectando con nuestro equipo vía <strong>Chat en vivo</strong></p>
+
+    <button id="btnHablar" class="btn-hablar">Hablar por whatsapp ahora!</button>
+
+    <!-- Bloque para pedir el nombre del usuario, oculto inicialmente -->
+    <div id="nombreWrapper" style="display:none; flex-direction: column; gap: 10px; margin-top: 10px;">
+      <label for="nombreInput">¿Cómo te llamás?</label>
+      <input id="nombreInput" type="text" placeholder="Ej: Juan Pérez" />
+      <button id="btnNombre">Iniciar chat</button>
+    </div>
+
+    <p class="info-clients">+10.000 CLIENTES GANANDO todos los días</p>
+
+    <!-- Contenedor para notificaciones que aparecerán abajo -->
+    <div id="notificaciones-container" aria-live="polite" aria-atomic="true" style="position: relative; height: 70px; margin-top: 15px; overflow: visible;">
+      <!-- Las notificaciones aparecerán aquí -->
+    </div>
+  </div>
+
+  <!-- Mensaje promocional, oculto inicialmente -->
+  <div id="mensajePromocional" style="display:none; margin-top: 15px; padding: 10px; border-radius: 10px; background: #e0ffe0; color: #217a21; font-weight: 700; font-size: 15px; text-align: center;">
+    🎉 Reclama tu bono de bienvenida del 20% por ser usuario nuevo en nuestra plataforma.<br/>
+    Tenemos Bonificación por referidos, consulta más info y las promos que tenemos para vos..
+  </div>
+
+  <!-- Chat oculto inicialmente -->
+  <div id="chatWrapper" style="display:none;" aria-live="polite" aria-atomic="false" role="log" aria-label="Chat en vivo">
+    <div id="chatHeaderCliente" role="banner" aria-label="Contacto">
+      <img src="/img/logo.jpg" alt="Logo Ganamos.bet" />
+      <div class="contact-info">
+        <div class="contact-name">Atencion al cliente</div>
+        <div class="contact-status">En línea</div>
+      </div>
+    </div>
+
+    <div id="chatContainer"></div>
+
+    <footer>
+      <input type="text" id="mensajeInput" placeholder="Escribí tu mensaje" aria-label="Mensaje" />
+      <button id="btnEnviar">Enviar</button>
+    </footer>
+  </div>
+
 </div>
 
 <script src="chat.js"></script>
