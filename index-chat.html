@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat Cliente - Plataforma Verificada</title>
+  <link rel="stylesheet" href="chat.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+<div class="info-box" aria-label="Información importante">
+  <strong>✅ Plataforma Verificada ✅</strong><br/>
+  Si es BET es de Confianza<br/><br/>
+  Te estamos conectando con nuestro equipo vía <strong>Chat en vivo</strong><br/><br/>
+  <button id="btnHablar">Hablar ahora!</button>
+  <br/>
+  +10.000 CLIENTES GANANDO todos los días
+</div>
+
+<div id="chatWrapper" aria-live="polite" aria-atomic="false" role="log" aria-label="Chat en vivo">
+  <div id="chatContainer"></div>
+  <footer>
+    <input type="text" id="mensajeInput" placeholder="Escribí tu mensaje" aria-label="Mensaje" />
+    <button id="btnEnviar">Enviar</button>
+  </footer>
+</div>
+
+<script src="chat.js"></script>
+</body>
+</html>
+
+
+
+
+
+
