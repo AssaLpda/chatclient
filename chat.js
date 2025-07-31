@@ -90,10 +90,14 @@ function iniciarChatYMostrarUI() {
   if (mensajePromocional) mensajePromocional.style.display = "block";
   chatWrapper.style.display = "flex";
 
-  // Cambiar el contenedor de notificaciones si no se hizo antes
+  // Cambiar el contenedor de notificaciones
   currentNotiContainer = notiContainerChat;
   notiContainerInicial.style.display = "none";
   notiContainerChat.style.display = "flex";
+
+  // Limpiar notificaciones visibles y detener el intervalo
+  notiContainerChat.innerHTML = "";
+  clearInterval(window.notiInterval);
 
   iniciarChat();
 }
@@ -219,9 +223,12 @@ function mostrarNotificacion() {
   }, 4000);
 }
 
-// Mostrar una cada 6 segundos
-setInterval(mostrarNotificacion, 6000);
-mostrarNotificacion(); // Primera inmediata
+// Mostrar notificaciones solo en pantalla de bienvenida
+if (currentNotiContainer === notiContainerInicial) {
+  window.notiInterval = setInterval(mostrarNotificacion, 15000);
+  mostrarNotificacion(); // Primera inmediata
+}
+
 
 
 
