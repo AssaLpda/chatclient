@@ -205,30 +205,48 @@ body {
   fill: none;
   stroke-width: 2;
 }
-
-/* Footer input y botón enviar */
+/* Ajustes responsive para el footer del chat */
 footer {
   display: flex;
+  flex-wrap: wrap; /* permite que los botones bajen si no hay espacio */
+  align-items: center;
   padding: 10px 15px;
   border-top: 1px solid #ddd;
   background: #f0f0f0;
   border-radius: 0 0 12px 12px;
   gap: 10px;
+  box-sizing: border-box;
 }
 
 #mensajeInput {
-  flex-grow: 1;
+  flex: 1 1 100%;
   padding: 10px 15px;
   border-radius: 25px;
   border: 1px solid #ccc;
   outline-offset: 2px;
   outline-color: #27ae60;
   font-size: 15px;
+  box-sizing: border-box;
 }
 
-#mensajeInput:focus {
-  border-color: #27ae60;
-  box-shadow: 0 0 5px #27ae60aa;
+/* Botones: archivo y enviar */
+#btnArchivo,
+#btnEnviar {
+  flex: 1 1 48%;
+  min-width: 120px;
+  padding: 10px 15px;
+  font-size: 15px;
+  border-radius: 25px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+#btnArchivo {
+  background: #555;
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 #btnEnviar {
@@ -236,13 +254,9 @@ footer {
   color: white;
   border: none;
   font-weight: 700;
-  font-size: 15px;
-  padding: 10px 20px;
-  border-radius: 25px;
   cursor: pointer;
   box-shadow: 0 6px 14px rgba(39, 174, 96, 0.45);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  user-select: none;
 }
 
 #btnEnviar:hover {
@@ -250,101 +264,12 @@ footer {
   box-shadow: 0 8px 20px rgba(33, 145, 80, 0.6);
 }
 
-.promo-message {
-  background: linear-gradient(135deg, #f5a623 0%, #f76b1c 100%);
-  color: white;
-  padding: 15px 20px;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 700;
-  text-align: center;
-  box-shadow: 0 6px 15px rgba(247, 107, 28, 0.6);
-  margin-bottom: 15px;
-  user-select: none;
-}
-
-/* ... Tu CSS anterior completo ... */
-
-#notificaciones-container {
-  position: relative;
-  height: 70px;
-  overflow: visible;
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  pointer-events: none;
-  z-index: 10;
-}
-
-/* Contenedor fijo abajo a la izquierda del chat */
-#notificaciones-chat-container {
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-  width: 380px;
-  display: none; /* Oculto por defecto, se activa al hacer clic en "Hablar" */
-  flex-direction: column;
-  gap: 8px;
-  pointer-events: none;
-  z-index: 999;
-}
-
-/* Cada notificación individual */
-.notification {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #d1f5d3; /* verde claro */
-  border-radius: 12px;
-  padding: 8px 12px;
-  box-shadow: 0 2px 6px rgb(33 125 25 / 0.3);
-  font-size: 14px;
-  color: #1b5e20;
-  font-weight: 600;
-  max-width: 100%;
-  pointer-events: auto;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: slideInFade 0.4s forwards;
-}
-
-/* Imagen del juego */
-.notification img {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  object-fit: cover;
-  flex-shrink: 0;
-  box-shadow: 0 0 6px rgba(33,125,25,0.5);
-}
-
-/* Texto interno */
-.notification .text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-/* Íconos en línea con texto */
-.notification .icon {
-  margin-right: 6px;
-  font-size: 16px;
-}
-
-/* Animación para entrada */
-@keyframes slideInFade {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Animación para salida */
-@keyframes slideOutFade {
-  to {
-    opacity: 0;
-    transform: translateY(-20px);
+/* Solo para pantallas muy pequeñas */
+@media (max-width: 400px) {
+  #btnArchivo,
+  #btnEnviar {
+    flex: 1 1 100%;
+    min-width: unset;
   }
 }
 
