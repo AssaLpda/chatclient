@@ -263,7 +263,8 @@ footer {
   user-select: none;
 }
 
-/* Contenedor general para notificaciones (ya lo tienes) */
+/* ... Tu CSS anterior completo ... */
+
 #notificaciones-container {
   position: relative;
   height: 70px;
@@ -272,8 +273,21 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  pointer-events: none; /* para no interferir con clicks */
+  pointer-events: none;
   z-index: 10;
+}
+
+/* Contenedor fijo abajo a la izquierda del chat */
+#notificaciones-chat-container {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  width: 380px;
+  display: none; /* Oculto por defecto, se activa al hacer clic en "Hablar" */
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  z-index: 999;
 }
 
 /* Cada notificación individual */
@@ -288,7 +302,7 @@ footer {
   font-size: 14px;
   color: #1b5e20;
   font-weight: 600;
-  max-width: 380px;
+  max-width: 100%;
   pointer-events: auto;
   opacity: 0;
   transform: translateY(20px);
@@ -333,6 +347,8 @@ footer {
     transform: translateY(-20px);
   }
 }
+
+
 
 
 

@@ -10,6 +10,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// DOM
 const btnHablar = document.getElementById("btnHablar");
 const chatWrapper = document.getElementById("chatWrapper");
 const chatContainer = document.getElementById("chatContainer");
@@ -23,6 +24,11 @@ const btnNombre = document.getElementById("btnNombre");
 const infoInicial = document.querySelector(".info-inicial");
 const mensajePromocional = document.getElementById("mensajePromocional");
 
+// Notificación containers
+const notiContainerInicial = document.getElementById("notificaciones-container");
+const notiContainerChat = document.getElementById("notificaciones-chat-container");
+let currentNotiContainer = notiContainerInicial; // por defecto
+
 let userId = localStorage.getItem("chatUserId");
 if (!userId) {
   userId = Date.now().toString();
@@ -33,15 +39,15 @@ let nombreUsuario = localStorage.getItem("chatNombre");
 
 btnHablar.addEventListener("click", () => {
   if (!nombreUsuario) {
-    // Mostrar input de nombre
     nombreWrapper.style.display = "flex";
   } else {
-    // Ocultar info inicial y mostrar chat y mensaje promocional
-    if (infoInicial) infoInicial.style.display = "none";
-    if (mensajePromocional) mensajePromocional.style.display = "block";
-    chatWrapper.style.display = "flex";
-    iniciarChat();
+    iniciarChatYMostrarUI();
   }
+
+  // Cambiar el contenedor de notificaciones
+  currentNotiContainer = notiContainerChat;
+  notiContainerInicial.style.display = "none";
+  notiContainerChat.style.display = "flex";
 });
 
 btnNombre.addEventListener("click", () => {
@@ -74,14 +80,23 @@ btnNombre.addEventListener("click", () => {
       ref.push(mensajeBienvenida);
       ref.push(primerMensajeUsuario);
     }
-    // Ocultar info inicial, input nombre, mostrar mensaje promocional y chat
-    if (infoInicial) infoInicial.style.display = "none";
-    nombreWrapper.style.display = "none";
-    if (mensajePromocional) mensajePromocional.style.display = "block";
-    chatWrapper.style.display = "flex";
-    iniciarChat();
+    iniciarChatYMostrarUI();
   });
 });
+
+function iniciarChatYMostrarUI() {
+  if (infoInicial) infoInicial.style.display = "none";
+  nombreWrapper.style.display = "none";
+  if (mensajePromocional) mensajePromocional.style.display = "block";
+  chatWrapper.style.display = "flex";
+
+  // Cambiar el contenedor de notificaciones si no se hizo antes
+  currentNotiContainer = notiContainerChat;
+  notiContainerInicial.style.display = "none";
+  notiContainerChat.style.display = "flex";
+
+  iniciarChat();
+}
 
 function iniciarChat() {
   escucharMensajes();
@@ -90,11 +105,9 @@ function iniciarChat() {
 
 function linkify(text) {
   const urlPattern = /(\b(https?:\/\/|www\.)[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
-  return text.replace(urlPattern, function (url) {
+  return text.replace(urlPattern, (url) => {
     let href = url;
-    if (!href.startsWith("http")) {
-      href = "http://" + href;
-    }
+    if (!href.startsWith("http")) href = "http://" + href;
     return `<a href="${href}" target="_blank" rel="noopener noreferrer">${url}</a>`;
   });
 }
@@ -103,7 +116,6 @@ function mostrarMensaje(snapshot) {
   const { mensaje, tipo, timestamp } = snapshot.val();
   const div = document.createElement("div");
   div.className = tipo === "user" ? "user message" : "admin message";
-
   let mensajeConLinks = linkify(mensaje).replace(/\n/g, "<br>");
 
   if (tipo === "admin") {
@@ -111,7 +123,6 @@ function mostrarMensaje(snapshot) {
     const horas = fecha.getHours().toString().padStart(2, "0");
     const minutos = fecha.getMinutes().toString().padStart(2, "0");
     const horaStr = `${horas}:${minutos}`;
-
     div.innerHTML = `
       <div class="burbuja">
         <p>${mensajeConLinks}</p>
@@ -121,14 +132,9 @@ function mostrarMensaje(snapshot) {
             <path d="M1.5 6L5.5 10L14.5 1" stroke="#4fc3f7" stroke-width="2" fill="none" />
           </svg>
         </div>
-      </div>
-    `;
+      </div>`;
   } else {
-    div.innerHTML = `
-      <div class="burbuja">
-        <p>${mensajeConLinks}</p>
-      </div>
-    `;
+    div.innerHTML = `<div class="burbuja"><p>${mensajeConLinks}</p></div>`;
   }
 
   chatContainer.appendChild(div);
@@ -172,34 +178,28 @@ mensajeInput.addEventListener("keydown", (e) => {
   }
 });
 
+// --- Notificaciones ---
 const nombres = ["Juan Carlos", "Lucía M.", "Pedro A.", "María L.", "Carlos B.", "Ana P.", "Sofía G.", "Federico T.", "Romina S.", "Martín D.", "Valentina R.", "Diego F.", "Julieta N.", "Andrés E.", "Camila V.", "Lucas M.", "Paula J.", "Nicolás H.", "Florencia C.", "Matías K.", "Carla Z.", "Emilia B.", "Joaquín T.", "Agustina Q.", "Tomás L.", "Verónica G.", "Benjamín A.", "Milagros Y.", "Ricardo P."];
-
 const ciudades = ["CABA", "Buenos Aires", "La Plata", "Mar del Plata", "Salta", "Córdoba", "Rosario", "Santa Fe", "Mendoza", "San Juan", "San Luis", "Tucumán", "Santiago del Estero", "La Rioja", "Catamarca", "Jujuy", "Formosa", "Chaco", "Corrientes", "Misiones", "Entre Ríos", "Neuquén", "Río Negro", "Chubut", "Santa Cruz", "Tierra del Fuego", "Bahía Blanca", "Resistencia", "Posadas", "Trelew"];
-
 const casinoImages = [
-  "https://static.casino.guru/pict/1077550/2-Sweet-4-U.png?timestamp=1736887411000&imageDataId=1154474&width=320&height=247",
-  "https://static.casino.guru/pict/165466/Gates-of-Olymps.png?timestamp=1653449170000&imageDataId=218130&width=270&height=208",
+  "https://static.casino.guru/pict/1077550/2-Sweet-4-U.png",
+  "https://static.casino.guru/pict/165466/Gates-of-Olymps.png",
   "https://ecdn.speedsize.com/146a650b-0738-4cda-9854-934a12c53a89/https://www.codere.bet.ar/lobby_tiles/MGS9MasksofFire_Square.jpg",
-  "https://static.templodeslots.es/pict/562516/Sweet-Crush.png?timestamp=1694440795000&imageDataId=610244&width=270&height=208",
+  "https://static.templodeslots.es/pict/562516/Sweet-Crush.png",
   "https://i.pinimg.com/736x/68/0f/61/680f617e5e94e7f104be209e3942668c.jpg",
-  "https://static.casino.guru/pict/181096/3-Clown-Monty.png?timestamp=1653451382000&imageDataId=224893&width=320&height=247",
+  "https://static.casino.guru/pict/181096/3-Clown-Monty.png",
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThm4B5BW-kVxkGq4z9pRfpd9azxfReieKUwQ&s",
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpK4byCnnWVkrbZNrgOiH9cbm4atUXducn5Q&s",
   "https://ecdn.speedsize.com/146a650b-0738-4cda-9854-934a12c53a89/https://www.codere.bet.ar/lobby_tiles/MGSQueenofAlexandria_Square.jpg"
 ];
 
-// Contenedor donde se mostrarán las notificaciones
-const notiContainer = document.getElementById('notificaciones-container');
-
 function mostrarNotificacion() {
   const nombre = nombres[Math.floor(Math.random() * nombres.length)];
   const ciudad = ciudades[Math.floor(Math.random() * ciudades.length)];
-  // Monto redondo entre 10,000 y 200,000 (en miles)
   const monto = (Math.floor(Math.random() * 20) + 1) * 10000;
   const minutos = Math.floor(Math.random() * 59) + 1;
   const imgUrl = casinoImages[Math.floor(Math.random() * casinoImages.length)];
 
-  // Crear elemento de notificación
   const notif = document.createElement('div');
   notif.classList.add('notification');
   notif.innerHTML = `
@@ -211,20 +211,18 @@ function mostrarNotificacion() {
     </div>
   `;
 
-  notiContainer.appendChild(notif);
+  currentNotiContainer.appendChild(notif);
 
-  // Después de 4 segundos animar salida y borrar
   setTimeout(() => {
     notif.style.animation = 'slideOutFade 0.4s forwards';
     notif.addEventListener('animationend', () => notif.remove());
   }, 4000);
 }
 
-// Mostrar una notificación cada 6 segundos
+// Mostrar una cada 6 segundos
 setInterval(mostrarNotificacion, 6000);
+mostrarNotificacion(); // Primera inmediata
 
-// Opcional: mostrar una primera notificación al cargar la página
-mostrarNotificacion();
 
 
 
