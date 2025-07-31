@@ -12,15 +12,13 @@ const db = firebase.database();
 
 // Cloudinary
 const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dwrfndfzs/upload';
-const CLOUDINARY_UPLOAD_PRESET = 'ml_default'; // asegurate de tener este preset activo
+const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
 
-// DOM
 const btnHablar = document.getElementById("btnHablar");
 const chatWrapper = document.getElementById("chatWrapper");
 const chatContainer = document.getElementById("chatContainer");
 const mensajeInput = document.getElementById("mensajeInput");
 const btnEnviar = document.getElementById("btnEnviar");
-
 const fileInput = document.getElementById("fileInput");
 const btnArchivo = document.getElementById("btnArchivo");
 
@@ -30,7 +28,6 @@ const btnNombre = document.getElementById("btnNombre");
 
 const infoInicial = document.querySelector(".info-inicial");
 const mensajePromocional = document.getElementById("mensajePromocional");
-
 const notiContainerInicial = document.getElementById("notificaciones-container");
 const notiContainerChat = document.getElementById("notificaciones-chat-container");
 let currentNotiContainer = notiContainerInicial;
@@ -42,7 +39,6 @@ if (!userId) {
 }
 let nombreUsuario = localStorage.getItem("chatNombre");
 
-// Escribiendo
 const escribiendoRef = db.ref(`chats/${userId}/escribiendo`);
 let escribiendoTimeout;
 function setEscribiendo(val) {
@@ -127,24 +123,21 @@ function linkify(text) {
 }
 
 function mostrarMensaje(snapshot) {
-  const { mensaje, tipo, timestamp } = snapshot.val();
+  const { mensaje, tipo, timestamp, esImagen } = snapshot.val();
   const div = document.createElement("div");
-  div.className = tipo === "user" ? "user message" : "admin message";
+  div.className = tipo === "admin" ? "admin message" : "user message";
 
-  if (tipo === "archivo") {
-    // Mostrar imagen o enlace para archivos
-    if (mensaje.match(/\.(jpeg|jpg|gif|png|svg)$/i)) {
-      div.innerHTML = `<div class="burbuja"><img src="${mensaje}" alt="archivo" style="max-width: 100%; border-radius: 10px;" /></div>`;
-    } else {
-      div.innerHTML = `<div class="burbuja"><a href="${mensaje}" target="_blank" style="color: #075e54;">📎 Ver archivo adjunto</a></div>`;
-    }
+  if (snapshot.val().esArchivo && esImagen) {
+    // Si es una imagen enviada
+    div.innerHTML = `<div class="burbuja"><img src="${mensaje}" alt="imagen" style="max-width: 100%; border-radius: 10px;" /></div>`;
+  } else if (snapshot.val().esArchivo) {
+    // Otro tipo de archivo
+    div.innerHTML = `<div class="burbuja"><a href="${mensaje}" target="_blank">📎 Ver archivo</a></div>`;
   } else {
     let mensajeConLinks = linkify(mensaje).replace(/\n/g, "<br>");
     if (tipo === "admin") {
       const fecha = new Date(timestamp);
-      const horas = fecha.getHours().toString().padStart(2, "0");
-      const minutos = fecha.getMinutes().toString().padStart(2, "0");
-      const horaStr = `${horas}:${minutos}`;
+      const horaStr = `${fecha.getHours().toString().padStart(2, "0")}:${fecha.getMinutes().toString().padStart(2, "0")}`;
       div.innerHTML = `
         <div class="burbuja">
           <p>${mensajeConLinks}</p>
@@ -222,18 +215,16 @@ fileInput.addEventListener("change", async function (e) {
     const fileUrl = data.secure_url;
     if (!fileUrl) throw new Error("No se recibió URL de Cloudinary");
 
-    // Detectar si es imagen
     const esImagen = file.type.startsWith("image/");
 
-    // Guardar en Firebase con tipo "user" para que admin.js lo cuente como mensaje nuevo
     await db.ref(`chats/${userId}/mensajes`).push({
       nombre: nombreUsuario || "Usuario",
       mensaje: fileUrl,
-      tipo: "user",              // ✅ importante para que admin.js lo detecte
-      esArchivo: true,           // ✅ opcional para distinguir en el cliente
-      esImagen: esImagen,        // ✅ para que cliente/admin sepa si es imagen o PDF
+      tipo: "user",              // importante: debe ser "user"
+      esArchivo: true,
+      esImagen: esImagen,
       timestamp: Date.now(),
-      leido: false               // ✅ para que admin lo marque como nuevo
+      leido: false
     });
 
     e.target.value = '';
@@ -242,6 +233,8 @@ fileInput.addEventListener("change", async function (e) {
     alert("Hubo un problema al subir el archivo.");
   }
 });
+
+
 
 
 
