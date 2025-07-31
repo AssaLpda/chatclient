@@ -227,6 +227,7 @@ fileInput.addEventListener("change", async function (e) {
       nombre: nombreUsuario || "Usuario",
       mensaje: fileUrl,
       tipo: "archivo",
+      leido: false,
       timestamp: Date.now(),
     });
 
