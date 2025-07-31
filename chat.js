@@ -48,13 +48,27 @@ btnHablar.addEventListener("click", () => {
     });
 });
 
+// Función para convertir URLs en enlaces clickeables
+function linkify(text) {
+  const urlPattern = /(\b(https?:\/\/|www\.)[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
 
+  return text.replace(urlPattern, function(url) {
+    let href = url;
+    if (!href.startsWith('http')) {
+      href = 'http://' + href;
+    }
+    return `<a href="${href}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+  });
+}
 
 function mostrarMensaje(data) {
   const { mensaje, tipo } = data.val();
   const div = document.createElement("div");
-  div.textContent = mensaje;
   div.className = tipo === "user" ? "user message" : "admin message";
+
+  // Mostrar el mensaje con links activos
+  div.innerHTML = linkify(mensaje);
+
   chatContainer.appendChild(div);
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
@@ -79,6 +93,7 @@ btnEnviar.addEventListener("click", () => {
   db.ref(`chats/${userId}/mensajes`).push(mensajeData);
   mensajeInput.value = "";
 });
+
 
 
 
