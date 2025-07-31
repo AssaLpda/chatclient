@@ -46,24 +46,31 @@
   </div>
 
   <!-- Chat oculto inicialmente -->
-  <div id="chatWrapper" style="display:none;" aria-live="polite" aria-atomic="false" role="log" aria-label="Chat en vivo">
-    <div id="chatHeaderCliente" role="banner" aria-label="Contacto">
-      <img src="https://w7.pngwing.com/pngs/198/625/png-transparent-call-centre-customer-service-computer-icons-call-centre-miscellaneous-face-telephone-call-thumbnail.png" alt="Logo Ganamos.bet" />
-      <div class="contact-info">
-        <div class="contact-name">Atencion al cliente</div>
-        <div class="contact-status">En línea</div>
-      </div>
+<div id="chatWrapper" style="display:none;" aria-live="polite" aria-atomic="false" role="log" aria-label="Chat en vivo">
+  <div id="chatHeaderCliente" role="banner" aria-label="Contacto">
+    <img src="/img/logo.jpg" alt="Logo Ganamos.bet" />
+    <div class="contact-info">
+      <div class="contact-name">Atencion al cliente</div>
+      <div class="contact-status">En línea</div>
     </div>
-
-    <div id="chatContainer"></div>
-
-    <footer>
-      <input type="text" id="mensajeInput" placeholder="Escribí tu mensaje" aria-label="Mensaje" />
-      <button id="btnEnviar">Enviar</button>
-    </footer>
   </div>
 
+  <div id="chatContainer"></div>
+
+  <footer>
+    <input type="text" id="mensajeInput" placeholder="Escribí tu mensaje" aria-label="Mensaje" />
+    <button id="btnEnviar">Enviar</button>
+  </footer>
+
+  <!-- 📌 Aquí se mostrarán notificaciones después de iniciar el chat -->
+  <div id="notificaciones-chat-container"
+       aria-live="polite"
+       aria-atomic="true"
+       style="position: absolute; bottom: 10px; left: 10px; z-index: 1000;">
+  </div>
 </div>
+
+
 
 <script src="chat.js"></script>
 </body>
