@@ -222,13 +222,18 @@ fileInput.addEventListener("change", async function (e) {
     const fileUrl = data.secure_url;
     if (!fileUrl) throw new Error("No se recibió URL de Cloudinary");
 
-    // Guardar solo la URL limpia y tipo archivo
+    // Detectar si es imagen
+    const esImagen = file.type.startsWith("image/");
+
+    // Guardar en Firebase con tipo "user" para que admin.js lo cuente como mensaje nuevo
     await db.ref(`chats/${userId}/mensajes`).push({
       nombre: nombreUsuario || "Usuario",
       mensaje: fileUrl,
-      tipo: "archivo",
-      leido: false,
+      tipo: "user",              // ✅ importante para que admin.js lo detecte
+      esArchivo: true,           // ✅ opcional para distinguir en el cliente
+      esImagen: esImagen,        // ✅ para que cliente/admin sepa si es imagen o PDF
       timestamp: Date.now(),
+      leido: false               // ✅ para que admin lo marque como nuevo
     });
 
     e.target.value = '';
